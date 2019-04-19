@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <title>Shopping Cart</title>
+
+
+    <style>
+         #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding-top: 100px;
+        }
+        .product-name {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .product-subheading {
+            font-family: "Palatino", Times, serif;
+        }
+        .product-price {
+            font-family: "Palatino", Times, serif;
+            font-weight: bold
+        }
+        .sumary-total {
+            font-family: "Palatino", Times, serif;
+            font-size: 20px;
+            font-weight: bold
+        }
+        .sumary-item {
+            font-family: "Palatino", Times, serif;
+        }
+        .product-option {
+            font-family: "Palatino", Times, serif;
+        }
+        .result-heading {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .result-pretext {
+            font-family: "Palatino", Times, serif;
+            font-size: 15px;
+            font-weight: bold
+        }
+        .description {
+            /* background-color: rgb(235, 235, 235); */
+            padding-left: 100px
+        }
+        .star-checked {
+            color: black;
+            font-size: 10px;
+        }
+        .product-link {
+            color: black;
+        }
+
+        .product-link:hover {
+            border: none;
+            text-decoration: none;
+            color: black
+        }
+        
+        .review-section {
+            background: #f6f6f6;
+            padding: 50px;
+        }
+
+        .delete-icon {
+            color: black
+        }
+
+        .stripe-button-el span {
+            color: red;
+            height: 122px;
+            background:red
+        }
+
+    </style>
+</head>
+<body>
+    <% include navbar.ejs%>
+    <div id="mainContainer">
+        <div class="result-heading" align="center">Shopping Cart (<span id="item-count-header"></span>)</div>
+        <hr>
+        
+        <div id="pretext" class="description result-pretext"></div>
+        <br>
+        <div class="row justify-content-center">
+            <div id="product-lists" class="description col-7"></div>
+            <div class="col-3 review-section">
+                <div id="summary-section"></div>
+                <br><br>
+                <button id="checkout-button" class="btn btn-dark col-12" onclick="preparePayment()">Checkout</button>
+            </div>
+        </div>
+        <hr>
+        <br>
+    </div>
+    <script>
+        var shoppingCart = <%- JSON.stringify(shoppingCart) %>;
+        var handler = StripeCheckout.configure({
+            key: 'pk_test_VOGK9jV0hyEvHE3sLRxcTYZN',
+            "shipping-address": true,
+            locale: 'auto',
+            token: function(token, args) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/customer/shoppingCart/process",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    data: JSON.stringify({
+                        shoppingCartId: shoppingCart.id,
+                        amount: shoppingCart.price.total * 100,
+                        currency: shoppingCart.currencyCode,
+                        token: token,
+                        args: args
+                    })
+                }).done(function(shoppingCart) {
+                    if (shoppingCart && shoppingCart.isPaid){
+                        window.location = "/customer/thankyou?shoppingCartId=" + shoppingCart.id
+                    }
+                    else {
+                        alert("Uh oh, something went wrong. Please try again later.")
+                    }
+                }).fail(function(res0) {
+                    var res = JSON.parse(res0)
+                    console.log(data)
+                    alert("Failed: can't connect to backend server")
+                });
+            }
+        });
+        console.log(shoppingCart)
+
+        $("#mainContainer").on("scroll", function() {
+            var nav = $("#navBar");
+            if (nav){
+                if ($("#mainContainer").scrollTop() == 0){
+                    console.log("at top")
+                    nav.addClass("customer-nav-default");
+                }
+                else {
+                    nav.removeClass("customer-nav-default");
+                }
+            }     
+        });
+
+        $(document).ready(function(){
+            $.fn.selectpicker.Constructor.BootstrapVersion = '4';
+        });
+
+        function getCurrencySymbol(threeLeterCurrency){
+            if (threeLeterCurrency == "USD") return "$";
+            if (threeLeterCurrency == "EUR") return "€";
+            return threeLeterCurrency;
+        }
+
+        function removeFromCart(elementId, skuId){
+            $.ajax({
+                type: 'DELETE',
+                url: "/customer/shoppingCart",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    skuId: skuId
+                })
+            }).done(function(body) {
+                shoppingCart = body.shoppingCart;  
+                
+                var iQuantity = 0;
+                shoppingCart.items.map(function(item){
+                    iQuantity += item.quantity;
+                })
+                document.getElementById("item-count").innerHTML = iQuantity;
+                
+                renderSummary();  
+                updateItemCount(); 
+
+                if (shoppingCart.items.length == 0){
+                    renderEmptyCart();
+                }
+                else {
+                    $(`#${elementId}`).remove();
+                }
+            }).fail(function(res0) {
+                var res = JSON.parse(res0)
+                console.log(data)
+                alert("Failed: can't connect to backend server")
+            });
+        }
+
+        function preparePayment(){
+            handler.open({
+                amount: shoppingCart.price.total * 100
+            })
+        }
+
+        function renderProducts(){
+            var html = "";
+            for (var i = 0; i < shoppingCart.items.length; i++){
+                html += `
+                <div id="product-row-${i}" class="row">
+                    <div class="col-3">
+                        <img class="rounded" width="150px" src="${shoppingCart.items[i].image}">
+                    </div>
+                    <div class="col-7">
+                        <div class="product-name">${shoppingCart.items[i].product.name}</div>`
+                        if (shoppingCart.items[i].product.descriptions.subHeading){
+                            html += `<div class="product-subheading">${shoppingCart.items[i].product.descriptions.subHeading}</div>`
+                        }
+                        html+= `
+                        <br>
+                        <div class="product-option">Size: ${shoppingCart.items[i].size}</div>
+            `
+                        if (shoppingCart.items[i].shadeName){
+                            html += `<span class="product-option"><i style='color:${shoppingCart.items[i].colorHex.split(",")[0]}' class='fas fa-circle'></i>&nbsp;&nbsp;${shoppingCart.items[i].shadeName}</span>`;
+                        }
+
+                        html += `<div class="product-price">${shoppingCart.items[i].currency} ${shoppingCart.items[i].price.toFixed(2)}</div>`;
+
+                        html += `<a href="#" class="product-link" onclick="addToCart('product-row-${i}', 'quantity-label-${i}', ${shoppingCart.items[i].id}, -1)"><i class="fas fa-minus-circle"></i></a>&nbsp;&nbsp;<strong id="quantity-label-${i}">${shoppingCart.items[i].quantity}</strong>&nbsp;&nbsp;<a href="#" class="product-link" onclick="addToCart('product-row-${i}', 'quantity-label-${i}', ${shoppingCart.items[i].id}, 1)"><i class="fas fa-plus-circle"></i></a>`
+                    html += `   
+                    </div>
+                    <div class="col-1">
+                        <a class="delete-icon" href="#" onclick="removeFromCart('product-row-${i}', ${shoppingCart.items[i].id})"><i class="fas fa-times fa-2x"></i></a>
+                    </div>
+                </div>
+                <br>`        
+            }
+            document.getElementById("product-lists").innerHTML = html;
+        }
+
+        function renderSummary(){
+            var html = "";
+            html += `
+                <div class="result-heading">Order Summary</div>
+                <div class="row sumary-item">
+                    <div class="col-6">Sub-total:</div> <div class="col-6" style="text-align: right">${shoppingCart.currencyCode} ${Number(shoppingCart.price.itemPrice).toFixed(2)}</div>
+                </div>
+                <div class="row sumary-item">
+                    <div class="col-6">Tax:</div> <div class="col-6" style="text-align: right">${shoppingCart.currencyCode} ${Number(shoppingCart.price.tax).toFixed(2)}</div>
+                </div>
+                <hr>
+                <div class="row sumary-total">
+                    <div class="col-6">Total:</div> <div class="col-6" style="text-align: right">${shoppingCart.currencyCode} ${Number(shoppingCart.price.total).toFixed(2)}</div>
+                </div>
+            `;
+
+            document.getElementById("summary-section").innerHTML = html;
+        }
+
+        function updateItemCount(){
+            var c = 0;
+            shoppingCart.items.map(function(i){
+                c += i.quantity;
+            })
+            document.getElementById("item-count-header").innerHTML = c;
+        }
+
+        function renderEmptyCart(){
+            document.getElementById("checkout-button").style.visibility = "hidden";
+            document.getElementById("product-lists").innerHTML = "<div class='product-subheading'>Please add a priced product to your bag in order to checkout.</div><br><a href='/products/category/skincare'><button id='shopping-button' class='btn btn-dark'>Go Shopping</button></a>"
+        }
+
+        function addToCart(elementId, labelId, skuId, quantity){
+            $.ajax({
+                type: 'POST',
+                url: "/customer/shoppingCart",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    skuId: skuId,
+                    quantity: quantity
+                })
+            }).done(function(body) {
+                shoppingCart = body.shoppingCart;      
+
+                var iQuantity = 0;
+                shoppingCart.items.map(function(item){
+                    iQuantity += item.quantity;
+                })
+                document.getElementById("item-count").innerHTML = iQuantity;  
+                
+                var found = body.shoppingCart.items.find(function(item){
+                    return Number(item.id) == Number(skuId)
+                })
+
+                if (found){
+                    document.getElementById(labelId).innerHTML = found.quantity;
+                }
+                else if (shoppingCart.items.length == 0){
+                    renderEmptyCart();
+                }
+                else {
+                    $(`#${elementId}`).remove();
+                }
+
+                renderSummary();  
+                updateItemCount(); 
+            }).fail(function(res0) {
+                var res = JSON.parse(res0)
+                console.log(data)
+                alert("Failed: can't connect to backend server")
+            });
+        }
+
+        renderSummary();
+        renderProducts();
+        updateItemCount();
+        if (shoppingCart.items.length == 0){
+            renderEmptyCart();
+        }
+
+    </script>
+</body>
+</html>

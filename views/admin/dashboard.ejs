@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script src="http://code.highcharts.com/maps/modules/map.js"></script>
+    <title>Dashboard</title>
+
+    <style>
+        .center-div p
+        {
+            position: relative;
+            top: 50%;
+            transform: perspective(1px) translateY(-50%);
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+        }
+        #sidebar {
+            width: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 999;
+        }
+        .tab-content {
+            padding-top: 60px;
+            margin-left: 70px;
+            margin-right: 35px;
+        }
+        .customNav {
+            top: 0;
+            position: fixed;
+            background-color:white;
+            width: 100%;
+            height: 70px;
+            margin-bottom: 35px;
+            z-index: 999;
+        }
+        .shadow {
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.19);
+        }
+        .nav-link {
+            padding: 1rem 1rem;
+            border-bottom-style: solid;
+            border-width: 1px;
+            border-color:grey;
+            color: grey
+        }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            background-color: transparent;
+            color:rgb(34, 203, 255);
+            border-left-color: rgb(34, 203, 255);
+            border-left-width: 3px;
+            border-left-style: solid
+        }
+    </style>
+</head>
+
+<body style="background-color:rgb(238, 232, 232);">
+    <div id="mainContainer">
+        <div id="sidebar">
+            <div class="nav flex-column nav-pills navbar-dark bg-dark" id="v-pills-tab" role="tablist" aria-orientation="vertical" align="center" style="height: 100%;">
+                <a class="nav-link"><img width="150px" src="/img/logo_final_3.png"></a> 
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><div class="sidebar-item" data-placement="right" title="Home"><font size="5"><i class="fas fa-home"></i></font></div></a>
+                <a class="nav-link" id="v-pills-products-tab" data-toggle="pill" href="#v-pills-products" role="tab" aria-controls="v-pills-products" aria-selected="false"><div class="sidebar-item" data-placement="right" title="Products"><font size="5"><i class="fas fa-tags"></i></font></div></a>
+                <a class="nav-link" id="v-pills-orders-tab" data-toggle="pill" href="#v-pills-orders" role="tab" aria-controls="v-pills-orders" aria-selected="false"><div class="sidebar-item" data-placement="right" title="Orders"><font size="5"><i class="fas fa-shopping-cart"></i></font></div></a>
+                <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false"><div class="sidebar-item" data-placement="right" title="Settings"><font size="5"><i class="fas fa-cogs"></i></font></div></a>
+            </div>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab"><% include home.ejs %></div>
+            <div class="tab-pane fade" id="v-pills-products" role="tabpanel" aria-labelledby="v-pills-products-tab"><% include product_list.ejs %></div>
+            <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab"><% include orders.ejs %></div>
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab"><% include settings.ejs %></div>
+        </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('.sidebar-item').tooltip()
+        })
+
+    </script>
+</body>
+
+</html>

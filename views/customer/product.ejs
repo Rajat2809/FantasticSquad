@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <title><%= product.name %></title>
+
+    <style>
+        .center-div p
+        {
+            position: relative;
+            top: 50%;
+            transform: perspective(1px) translateY(-50%);
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding-top: 100px;
+        }
+        #sidebar {
+            width: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 999;
+        }
+        .tab-content {
+            padding-top: 60px;
+            margin-left: 70px;
+            margin-right: 35px;
+        }
+        .customNav {
+            top: 0;
+            position: fixed;
+            background-color:white; 
+            width: 100%;
+            height: 70px;
+            margin-bottom: 35px;
+            z-index: 999;
+        }
+        .shadow {
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.19);
+        }
+        .nav-link {
+            padding: 1rem 1rem;
+            border-bottom-style: solid;
+            border-width: 1px;
+            border-color:grey;
+            color: grey
+        }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            background-color: transparent;
+            color:rgb(34, 203, 255);
+            border-left-color: rgb(34, 203, 255);
+            border-left-width: 3px;
+            border-left-style: solid
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%22222' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%22222' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+        }
+        .product-name {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 30px;
+        }
+        .product-subheading {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .related-product-name {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 25px;
+        }
+        .related-product-subheading {
+            font-family: "Palatino", Times, serif;
+            /* font-size: 25px; */
+        }
+        .description {
+            /* background-color: rgb(235, 235, 235); */
+            padding-left: 100px
+        }
+        .product-detail {
+            font-size: 25px;
+            font-family: "Times New Roman", Times, serif;
+        }
+        .product-detail-underline {
+            border-bottom:solid;
+            border-bottom-width: 1px;
+            border-bottom-color: rgb(235, 235, 235)
+        }
+        .attr-right-col {
+            padding-left: 0;
+            margin-left: 0
+        }
+        #price {
+            color: rgb(165, 5, 5);
+            font-size: 25px;
+            font-family: "Comic Sans MS", Times, serif;
+        }
+        .product-price {
+            font-family: "Palatino", Times, serif;
+            font-weight: bold
+        }
+        #shipping-price {
+            font-size: 15px;
+            font-family: "Comic Sans MS", Times, serif;
+        }
+        .product-attr>ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+        .bootstrap-select>.btn {
+            border-color: rgb(209, 209, 209); 
+            background: white !important;
+        }
+        .dropdown-item.active, .dropdown-item:active { 
+            background: rgb(253, 215, 215);
+            color:black
+        }
+        .star-checked {
+            color: black;
+            font-size: 10px;
+        }
+        .star-review-section {
+            color: orange;
+            font-size: 20px;
+        }
+        .review-section {
+            background: #f6f6f6;
+            padding-left: 200px;
+            padding-right: 200px;
+            padding-top: 50px;
+            padding-bottom: 100px;
+        }
+    </style>
+    <script>
+        var product = <%- JSON.stringify(product)%>;
+        var selectedSkuId = <%= selectedSkuId %>;
+    </script>
+</head>
+
+<body>
+    <% include navbar.ejs%>
+    <div id="mainContainer">
+        <div class="row">
+            <div class="col-6">
+                <div id="product-images" style="padding-left: 20px;"></div>
+            </div>
+            <div class="col-6">
+                <div class="product-name"><%=product.name%></div>
+                <div class="product-subheading"><%=product.descriptions.subHeading%></div>
+                <div>
+                    <% for (var j = 0; j < 5; j++){ %>
+                        <% if ((product.averageRating - j) >= 1){ %>
+                            <i class="fas fa-star star-checked"></i>
+                        <% } else if ((product.averageRating - j) < 1 && (product.averageRating - j) > 0) { %>
+                            <i class="fas fa-star-half-alt star-checked"></i>
+                        <% } else { %>
+                            <i class="far fa-star"></i>
+                        <% } %>
+                    <% } %>
+                </div>
+                <br>
+                <div id="price"></div><div id="shipping-price"> + free shipping</div>
+
+                <% if (product.descriptions.benefits){ %>
+                    <br>
+                    <strong>BENEFIT</strong>
+                    <div><%=product.descriptions.benefits%></div>
+                <% } %>
+                
+                <form>
+                    <br>
+                    <% if (product.sizes){ %>
+                        <% if (product.sizes.length == 1){ %>
+                            <div>Size: <%= product.sizes[0] %></div>
+                            <br>
+                        <% } else if (product.sizes.length > 1){ %>
+                            <select class="form-control selectpicker col-4" id="size-picker" onchange="updateSelectedIndex()">
+                                <% for (var i = 0; i < product.sizes.length; i++){ %>
+                                    <option value="<%=i%>">Size: <%= product.sizes[i] %></option>
+                                <% } %>
+                            </select>
+                            <br><br>
+                        <% } %>
+                    <% } %>
+
+                    <% if (product.colors){ %>
+                        <% if (product.colors.length == 1){ %>
+                            <div>colors: <%= product.colors[0].name %></div>
+                            <br>
+                        <% } else if (product.colors.length > 1){ %>
+                            <select class="form-control selectpicker col-4" id="color-picker" onchange="updateSelectedIndex()">
+                                <% for (var i = 0; i < product.colors.length; i++){ %>
+                                    <option value="<%=i%>" data-content="<span><i style='color:<%= product.colors[i].hex[0] %>' class='fas fa-circle'></i>&nbsp;&nbsp;&nbsp;<%= product.colors[i].name %></span>"><%= product.colors[i].name %></option>
+                                <% } %>
+                            </select>
+                            <br><br>
+                        <% } %>
+                    <% } %>
+                    
+
+                    <select class="form-control selectpicker col-2" id="quantity-picker">
+                        <option value="1">Qty: 1</option>
+                        <option value="2">Qty: 2</option>
+                        <option value="3">Qty: 3</option>
+                        <option value="4">Qty: 4</option>
+                        <option value="5">Qty: 5</option>
+                        <option value="6">Qty: 6</option>
+                        <option value="7">Qty: 7</option>
+                        <option value="8">Qty: 8</option>
+                        <option value="9">Qty: 9</option>
+                        <option value="10">Qty: 10</option>
+                    </select>
+                    <br><br>
+                    
+                    <button class="btn btn-dark col-4" onclick="addToCart()"><strong>Add to Bag</strong></button>
+                </form>
+            </div>
+        </div>
+        <br><br>
+        
+        <div class="description">
+            <div class="product-detail">Product Details</div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="product-detail-underline"></div>
+                    <br>
+                    <div><%- product.descriptions.detail %></div>
+                    <br>
+                    <% if (product.descriptions.howToUse) { %>
+                        <div><strong>How To Use</strong></div>
+                        <br>
+                        <div><%- product.descriptions.howToUse %></div>
+                        <br>
+                    <% } %>
+                </div>
+                <div class="col-6 attr-right-col">
+                    <br>
+                    <% if (product.descriptions.skinType) { %>
+                        <div><strong>Skin Type</strong></div>
+                        <div class="product-attr"><%- product.descriptions.skinType %></div>
+                        <br>
+                    <% } %>
+                    <% if (product.descriptions.idealFor) { %>
+                        <div><strong>Ideal For</strong></div>
+                        <div class="product-attr"><%- product.descriptions.idealFor %></div>
+                        <br>
+                    <% } %>
+                    <% if (product.descriptions.formulaFacts) { %>
+                        <div><strong>Formula Facts</strong></div>
+                        <div class="product-attr"><%- product.descriptions.formulaFacts %></div>
+                        <br>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="review-section">
+            <div style="padding-left:0" class="product-subheading" align="center">Reviews</div>
+            <hr>
+            <div class="row">
+
+                <div class="col-sm-6" align="center">
+                    <% for (var i = 0; i < product.ratingHistogram.length; i++){ %>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-2"><%= product.ratingHistogram[i].numStars %> Stars</div>
+                            <div class="progress" style="height:25px;width:100px;">
+                                <div class="progress-bar bg-dark" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="5" style="width: <%= product.ratingHistogram[i].percentage %>%"></div>
+                            </div>
+                            <div class="col-3"><%= product.ratingHistogram[i].count %></div>
+                        </div>
+                    <% } %>    
+                </div>	
+
+
+                <div class="col-sm-6" align="center">
+                    <div class="rating-block">
+                        <h2 class="bold padding-bottom-7"><%= product.averageRating.toFixed(1) %> <small>/ 5</small></h2>
+                        <% for (var j = 0; j < 5; j++){ %>
+                            <% if ((product.averageRating - j) >= 1){ %>
+                                <i class="fas fa-star star-review-section"></i>
+                            <% } else if ((product.averageRating - j) < 1 && (product.averageRating - j) > 0) { %>
+                                <i class="fas fa-star-half-alt star-review-section"></i>
+                            <% } else { %>
+                                <i class="far fa-star"></i>
+                            <% } %>
+                        <% } %>
+                        <h4><%= product.recommendedRatio %>% OF CUSTOMERS <br>RECOMMEND THIS PRODUCT</h4>
+                    </div>
+                </div> 
+            </div>
+            <hr>
+
+            <div class="col-sm-6">
+                <div class="rating-block">
+                    <% for (var i = 0; i < product.reviews.length; i++){ %>
+                        <div>
+                            <% for (var j = 0; j < 5; j++){ %>
+                                <% if ((product.reviews[i].rating - j) >= 1){ %>
+                                    <i class="fas fa-star star-checked"></i>
+                                <% } else if ((product.reviews[i].rating - j) < 1 && (product.reviews[i].rating - j) > 0) { %>
+                                    <i class="fas fa-star-half-alt star-checked"></i>
+                                <% } else { %>
+                                    <i class="far fa-star star-checked"></i>
+                                <% } %>
+                            <% } %>
+                        </div>
+                        <div><strong><%= product.reviews[i].name%>: "<%= product.reviews[i].headline%>"</strong></div>
+                        <div><%= product.reviews[i].comments%> (<%= product.reviews[i].date%>)</div>
+                        <br>
+                    <% } %>
+            </div>
+        </div>
+        <br>
+        <% if (product.relatedProducts && product.relatedProducts.length > 0){ %>
+            <div class="product-detail" align="center">Related Products</div>
+            <hr>
+            <br>
+            <div class="row">
+                    <% for (var i = 0; i < product.relatedProducts.length && i < 3; i++){ %>
+                        <div class="col-4" align="center">
+                            <div><img width="150rem" src="<%= product.relatedProducts[i].images.normal %>"></img></div>
+                            <div class="related-product-name"><%= product.relatedProducts[i].name %></div>
+                            <div class="related-product-subheading"><%= product.relatedProducts[i].descriptions.subHeading ? product.relatedProducts[i].descriptions.subHeading : '' %></div>
+                            <div class="product-price"><%= product.relatedProducts[i].priceRange %></div>
+                            <div>
+                                <% for (var j = 0; j < 5; j++){ %>
+                                    <% if ((product.relatedProducts[i].rating - j) >= 1){ %>
+                                        <i class="fas fa-star star-checked"></i>
+                                    <% } else if ((product.relatedProducts[i].rating - j) < 1 && (product.relatedProducts[i].rating - j) > 0) { %>
+                                        <i class="fas fa-star-half-alt star-checked"></i>
+                                    <% } else { %>
+                                        <i class="far fa-star star-checked"></i>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            <br>
+                            <button class="btn btn-dark col-6" onclick="window.location=`/products/<%= product.relatedProducts[i].id %>/view`">Shop Now</button>                  
+                        </div>
+                    <% } %>
+            </div>
+        <% } %>
+
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function(){
+//       $('.your-class').slick({
+//         slidesToShow: 1,
+//   slidesToScroll: 1,
+//   asNavFor: '.slider-for',
+//   dots: true,
+//   centerMode: true,
+//   focusOnSelect: true
+//       });
+
+// $(document).ready(function(){
+//   $('.carousel').slick({
+//   slidesToShow: 1,
+//   arrows: true,
+//   dots:true,
+//   centerMode: false,
+//   });
+// });
+        //  $('#carousel1').slick({
+        //     slidesToShow: 1,
+        //     slidesToScroll: 1,
+        //     arrows: true,
+        //     fade: true,
+        //     asNavFor: '#carousel2'
+        //     });
+        $('#product-images').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            // asNavFor: '#carousel1',
+            dots: true,
+            prevArrow: false,
+            nextArrow: false,
+
+        });
+        // Required to make bootstrap-select work with bootstrap 4
+        $.fn.selectpicker.Constructor.BootstrapVersion = '4';
+        updateSelectedIndex()
+    });
+
+</script>
+<script>
+    function updateSelectedIndex(){
+        var sizeId = null;
+        if (product.sizes.length == 1){
+            sizeId = 0;
+        }
+        else {
+            var sizePicker = document.getElementById("size-picker");
+            if (sizePicker){
+                sizeId = sizePicker.options[sizePicker.selectedIndex].value
+            }
+        }
+        
+        var colorId = null;
+        if (product.colors.length == 1){
+            colorId = 0;
+        }
+        else {
+            var colorPicker = document.getElementById("color-picker");
+            if (colorPicker){
+                colorId = colorPicker.options[colorPicker.selectedIndex].value
+            }
+        }
+        
+        selectedSkuId = product.skus.findIndex(function(sku){
+            return sku.colorId == colorId && sku.sizeId == sizeId;
+        })
+        
+
+        console.log(`sizeId: ${sizeId}`)
+        console.log("selectedSkuId: " + selectedSkuId)
+        renderSelectedInfo(product.skus[selectedSkuId])
+    }
+
+    function renderSelectedInfo(sku){
+        document.getElementById("price").innerHTML = `${ getCurrencySymbol(product.currency) } ${sku.price}`;
+        
+        var productImages = $('#product-images');
+        var currentIdx = productImages.slick('slickCurrentSlide');
+        productImages.slick('removeSlide', null, null, true);
+        productImages.slick('slickAdd', `<div><img style="height: auto; width: 400px; margin: 0 auto; " src="${product.skus[selectedSkuId].image}"></div>`);
+        if (product.skus[selectedSkuId].smooshImage){
+            productImages.slick('slickAdd', `<div><img style="height: auto; width: 400px; margin: 0 auto; " src="${product.skus[selectedSkuId].smooshImage}"></div>`);
+        }
+
+        productImages.slick('slickGoTo', currentIdx, true);
+    }
+
+    function getCurrencySymbol(threeLeterCurrency){
+        if (threeLeterCurrency == "USD") return "$";
+        if (threeLeterCurrency == "EUR") return "€";
+        return threeLeterCurrency;
+    }
+
+    function addToCart(){
+        var quantityPicker = document.getElementById("quantity-picker") 
+        var quantity = quantityPicker.options[quantityPicker.selectedIndex].value
+        $.ajax({
+            type: 'POST',
+            url: "/customer/shoppingCart",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                skuId: product.skus[selectedSkuId].id,
+                quantity: quantity
+            })
+        }).done(function(body) {
+            shoppingCart = body.shoppingCart;      
+            var iQuantity = 0;
+            shoppingCart.items.map(function(item){
+                iQuantity += item.quantity;
+            })
+            document.getElementById("item-count").innerHTML = iQuantity;   
+        }).fail(function(res0) {
+            var res = JSON.parse(res0)
+            console.log(data)
+            alert("Failed: can't connect to backend server")
+        });
+    }
+
+    console.log(<%- JSON.stringify(product)%>)
+    
+    $("#mainContainer").on("scroll", function() {
+        var nav = $("#navBar");
+        if (nav){
+            if ($("#mainContainer").scrollTop() == 0){
+                console.log("at top")
+                nav.addClass("customer-nav-default");
+            }
+            else {
+                nav.removeClass("customer-nav-default");
+            }
+        }
+        
+    });
+
+</script>
+</html>

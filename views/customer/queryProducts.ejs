@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <title>Search</title>
+
+
+    <style>
+         #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding-top: 100px;
+        }
+        .product-name {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .product-subheading {
+            font-family: "Palatino", Times, serif;
+        }
+        .product-price {
+            font-family: "Palatino", Times, serif;
+        }
+        .result-heading {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .result-pretext {
+            font-family: "Palatino", Times, serif;
+            font-size: 15px;
+            font-weight: bold
+        }
+        .description {
+            /* background-color: rgb(235, 235, 235); */
+            padding-left: 100px
+        }
+        .star-checked {
+            color: black;
+            font-size: 10px;
+        }
+        .product-link {
+            color: black;
+        }
+
+        .product-link:hover {
+            border: none;
+            text-decoration: none;
+            color: black
+        }
+    </style>
+</head>
+<body>
+    <% include navbar.ejs%>
+    <div id="mainContainer">
+        <div class="result-heading" align="center">Product Results</div>
+        <hr>
+        
+        <div id="pretext" class="description result-pretext"></div>
+        <br>
+        <div id="product-lists" class="description"></div>
+        <hr>
+        <br>
+        <div align="center">
+            <button id="previous-products" class="btn btn-outline-dark" onclick="clickProductPaginationButton('#previous-products')"><i class="fas fa-arrow-left"></i></button>
+            <button id="next-products" class="btn btn-outline-dark" onclick="clickProductPaginationButton('#next-products')"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+    <script>
+        console.log(<%- JSON.stringify(products)%>)
+        var products = <%- JSON.stringify(products)%>;
+
+        $("#mainContainer").on("scroll", function() {
+            var nav = $("#navBar");
+            if (nav){
+                if ($("#mainContainer").scrollTop() == 0){
+                    console.log("at top")
+                    nav.addClass("customer-nav-default");
+                }
+                else {
+                    nav.removeClass("customer-nav-default");
+                }
+            }
+            
+        });
+
+        function updateProducts(){
+            var pretext = `YOU SEARCHED "<%= q %>" `;
+            if (products.total == 0){
+                pretext += "FOUND 0 PRODUCT."
+            }
+            // else {
+            //     pretext += `SHOWING ${products.offset + 1} - ${products.limit + products.offset} OF ${products.total} PRODUCTS.`
+            // }
+            document.getElementById("pretext").innerHTML = pretext
+            renderProducts()
+            var previous = document.getElementById("previous-products")
+            if (products.pagination && products.pagination.previous){
+                $('#previous-products').data("pagination", JSON.stringify(products.pagination.previous))
+                $('#previous-products').prop("disabled", false);
+            }
+            else {
+                $('#previous-products').data("pagination", null)
+                $('#previous-products').prop("disabled", true);
+            }
+        
+            var next = document.getElementById("previous-products")
+            if (products.pagination && products.pagination.next){
+                $('#next-products').data("pagination", JSON.stringify(products.pagination.next))
+                $('#next-products').prop("disabled", false);
+            }
+            else {
+                $('#next-products').data("pagination", null)
+                $('#next-products').prop("disabled", true);
+            }   
+        }
+
+        function renderProducts(){
+            var html = "";
+            for (var i = 0; i < products.data.length; i++){  
+                if (i % 3 == 0) {
+                    html += '<div class="row">';
+                }
+                
+                html += 
+                `<div class="col-4 pl-6 pr-6" align="center">
+                    <a class="product-link" href="/products/${products.data[i].id}/view">
+                        <img width="200px" src="${products.data[i].images.normal}">
+                        <div class="product-name">${products.data[i].name}</div>
+                        <div class="product-subheading">${products.data[i].descriptions.subHeading || ""}</div>
+                        <div class="product-price"><strong>${products.data[i].priceRange}</strong></div>
+                        <div class="product-price">${products.data[i].descriptions.benefits || ""}</div>
+                        <div>`;
+                            for (var j = 0; j < 5; j++){
+                                if ((products.data[i].averageRating - j) >= 1){
+                                    html+= '<i class="fas fa-star star-checked"></i>';
+                                } 
+                                else if ((products.data[i].averageRating - j) < 1 && (products.data[i].averageRating - j) > 0) {
+                                    html += '<i class="fas fa-star-half-alt star-checked"></i>';
+                                } 
+                                else {
+                                    html += '<i class="far fa-star star-checked"></i>';
+                                }
+                            }
+                html += `</div>
+                    </a>
+                </div>`
+
+                if (i % 3 == 2) {
+                    html += `</div><br>`;     
+                }
+            }
+            document.getElementById("product-lists").innerHTML = html;
+        }
+
+        function queryProducts(q, limit = 20, offset = 0){
+            $.ajax({
+                type: 'GET',
+                url: "/admin/products",
+                data: {
+                    q: q,
+                    limit: limit,
+                    offset: offset
+                }
+            }).done(function(products0) {
+                products = products0;
+                updateProducts();
+            })
+        }
+
+        function clickProductPaginationButton(target){
+            var payload = JSON.parse($(target).data("pagination") || "{}")
+            console.log(payload)
+            queryProducts(payload.q, payload.limit, payload.offset)
+        }
+
+        updateProducts();
+    </script>
+</body>
+</html>

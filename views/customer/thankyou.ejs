@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <title>Thank You</title>
+
+
+    <style>
+         #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding-top: 100px;
+            padding-left: 100px;
+        }
+        .product-name {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .product-subheading {
+            font-family: "Palatino", Times, serif;
+        }
+        .product-price {
+            font-family: "Palatino", Times, serif;
+            font-weight: bold
+        }
+        .sumary-total {
+            font-family: "Palatino", Times, serif;
+            font-size: 20px;
+            font-weight: bold
+        }
+        .sumary-item {
+            font-family: "Palatino", Times, serif;
+        }
+        .product-option {
+            font-family: "Palatino", Times, serif;
+        }
+        .result-heading {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .result-pretext {
+            font-family: "Palatino", Times, serif;
+            font-size: 15px;
+            font-weight: bold
+        }
+        .description {
+            /* background-color: rgb(235, 235, 235); */
+            padding-left: 100px
+        }
+        .star-checked {
+            color: black;
+            font-size: 10px;
+        }
+        .product-link {
+            color: black;
+        }
+
+        .product-link:hover {
+            border: none;
+            text-decoration: none;
+            color: black
+        }
+        
+        .review-section {
+            background: #f6f6f6;
+            padding: 50px;
+        }
+
+    </style>
+    <script>
+        var shoppingCart = <%- JSON.stringify(shoppingCart) %>
+        console.log(shoppingCart)
+        function getPaymentTypeImage(brand){
+            console.log("brand: " + brand)
+            var type = brand.toLowerCase()
+            if (type == "visa"){
+            return "https://checkout.stripe.com/m/lib/images/cards/visa@2x-01c4f56e15c08f3ecac8a23f1e072716.png"
+            }
+            else if (type == "mastercard"){
+            return "https://checkout.stripe.com/m/lib/images/cards/mastercard-b0c77ab92b6e1cdec2c089daa965fad4.png"
+            }
+            else if (type == "american express"){
+            return "https://checkout.stripe.com/m/lib/images/cards/amex-3b42341d44a7f9133f9401ba41b1326a.png"
+            }
+            else {
+            return ""
+            }
+        }
+    </script>
+</head>
+<body>
+    <% include navbar.ejs%>
+    <div id="mainContainer">
+        <div class="result-heading">Thank you for your purchase! <span style="color:green"><i class="far fa-check-circle fa-2x"></i></span></div>
+        <div class="result-pretext">A confirmation email has been sent to "<%= shoppingCart.paymentData[0].token.email %>"</div>
+        <div clas="result-pretext">Order #<%= shoppingCart.id %></div>
+        <hr>
+        <div class="row">
+            <div class="col-4">
+                <div class="sumary-total">Shipping Address</div>
+                <div><%= shoppingCart.paymentData[0].result.source.name%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_line1%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_city%> <%= shoppingCart.paymentData[0].result.source.address_state%><%= shoppingCart.paymentData[0].result.source.address_zip%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_country%></div>
+                <br>
+                <div class="sumary-total">Billing Address</div>
+                <div><%= shoppingCart.paymentData[0].result.source.name%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_line1%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_city%> <%= shoppingCart.paymentData[0].result.source.address_state%><%= shoppingCart.paymentData[0].result.source.address_zip%></div>
+                <div><%= shoppingCart.paymentData[0].result.source.address_country%></div>
+            </div>
+            <div class="col-6">
+                <div class="sumary-total">Payment Method</div>
+                <div id="paymentMethod"></div>
+            </div>
+        </div>
+        
+        <hr>
+        <br>
+    </div>
+    <script>
+        document.getElementById("paymentMethod").innerHTML = `<img height="20px" src="${getPaymentTypeImage(shoppingCart.paymentData[0].result.source.brand)}"> **** **** **** ${shoppingCart.paymentData[0].result.source.last4}`
+    </script>
+</body>
+</html>

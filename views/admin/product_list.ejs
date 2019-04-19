@@ -1,0 +1,105 @@
+<div class="customNav center-div shadow">
+    <p style="margin-left:30px"><font size="5">Products</font></p>
+</div>
+<div class="tab-content">
+    <div class="col-12 shadow" style="background-color: white; padding:50px">
+        <div class="center-div">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="search_bar_icon"><i class="fas fa-search"></i></span>
+                </div>
+                <input id="product-query-textfield" type="text" class="form-control" placeholder="Search products" aria-label="Search products" aria-describedby="search_bar_icon" oninput="queryProducts()">
+            </div>
+        </div>
+        <br>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Inventory</th>
+                        <th scope="col">Locale</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body"></tbody>
+            </table>
+        </div>
+        <div align="center">
+            <button id="previous-products" class="btn btn-outline-dark" onclick="clickProductPaginationButton('#previous-products')"><i class="fas fa-arrow-left"></i></button>
+            <button id="next-products" class="btn btn-outline-dark" onclick="clickProductPaginationButton('#next-products')"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function queryProducts(q = document.getElementById("product-query-textfield").value, limit = 20, offset = 0){
+        $.ajax({
+            type: 'GET',
+            url: "/admin/products",
+            data: {
+                q: q,
+                limit: limit,
+                offset: offset
+            }
+        }).done(function(products) {
+            renderProducts(products.data)
+            var previous = document.getElementById("previous-products")
+            if (products.pagination && products.pagination.previous){
+                $('#previous-products').data("pagination", JSON.stringify(products.pagination.previous))
+                $('#previous-products').prop("disabled", false);
+            }
+            else {
+                $('#previous-products').data("pagination", null)
+                $('#previous-products').prop("disabled", true);
+            }
+        
+            var next = document.getElementById("previous-products")
+            if (products.pagination && products.pagination.next){
+                $('#next-products').data("pagination", JSON.stringify(products.pagination.next))
+                $('#next-products').prop("disabled", false);
+            }
+            else {
+                $('#next-products').data("pagination", null)
+                $('#next-products').prop("disabled", true);
+            }   
+        }).fail(function(res0) {
+            var res = JSON.parse(res0)
+            console.log(data)
+            alert("Failed: cann't connect to backend server")
+        });
+    }
+
+    function renderProducts(data){
+        var body = ""
+        data.map(function(product){
+            var inventory = 0;
+            product.skus.map(function(sku){
+                inventory += sku.inventory
+            })
+            body += `
+            <tr>
+                <td>
+                    <input type="checkbox">
+                    <img align="right" height="40" width="40" src="${product.images.normal}"
+                </td>
+                <td>${product.name}</td>
+                <td>${product.isPublished ? '<a href="#" class="badge badge-success">Published</a>': '<a href="#" class="badge badge-danger">Unpublished</a>'}</td>
+                <td>${inventory}</td>
+                <td>${product.locale}</td>
+                <td>${product.priceRange}</td>
+            </tr>`
+        })
+        document.getElementById("product-table-body").innerHTML = body;
+    }
+
+    function clickProductPaginationButton(target){
+        var payload = JSON.parse($(target).data("pagination") || "{}")
+        console.log(payload)
+        queryProducts(payload.q, payload.limit, payload.offset)
+    }
+
+    queryProducts();
+</script>

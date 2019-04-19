@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    <title>CMPE295 Shop</title>
+
+    <style>
+        .center-div p
+        {
+            position: relative;
+            top: 50%;
+            transform: perspective(1px) translateY(-50%);
+        }
+        /* html, body {
+            height: 100%;
+            overflow: hidden;
+        } */
+        #mainContainer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding-top: 100px;
+        }
+        #sidebar {
+            width: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 999;
+        }
+        .tab-content {
+            padding-top: 60px;
+            margin-left: 70px;
+            margin-right: 35px;
+        }
+        .customNav {
+            top: 0;
+            position: fixed;
+            background-color:white;
+            width: 100%;
+            height: 70px;
+            margin-bottom: 35px;
+            z-index: 999;
+        }
+        .shadow {
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.19);
+        }
+        .nav-link {
+            padding: 1rem 1rem;
+            border-bottom-style: solid;
+            border-width: 1px;
+            border-color:grey;
+            color: grey
+        }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            background-color: transparent;
+            color:rgb(34, 203, 255);
+            border-left-color: rgb(34, 203, 255);
+            border-left-width: 3px;
+            border-left-style: solid
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%22222' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%22222' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+        }
+        .product-name {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 40px;
+        }
+        .product-subheading {
+            font-family: "Palatino", Times, serif;
+            font-size: 25px;
+        }
+        .related-product-name {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 25px;
+        }
+        .related-product-subheading {
+            font-family: "Palatino", Times, serif;
+            /* font-size: 25px; */
+        }
+        .description {
+            /* background-color: rgb(235, 235, 235); */
+            padding-left: 100px
+        }
+        .product-detail {
+            font-size: 25px;
+            font-family: "Times New Roman", Times, serif;
+        }
+        .product-detail-underline {
+            border-bottom:solid;
+            border-bottom-width: 1px;
+            border-bottom-color: rgb(235, 235, 235)
+        }
+        .attr-right-col {
+            padding-left: 0;
+            margin-left: 0
+        }
+        #price {
+            color: rgb(165, 5, 5);
+            font-size: 25px;
+            font-family: "Comic Sans MS", Times, serif;
+        }
+        .product-price {
+            font-family: "Palatino", Times, serif;
+            font-weight: bold
+        }
+        #shipping-price {
+            font-size: 15px;
+            font-family: "Comic Sans MS", Times, serif;
+        }
+        .product-attr>ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+        .bootstrap-select>.btn {
+            border-color: rgb(209, 209, 209);
+            background: white !important;
+        }
+        .dropdown-item.active, .dropdown-item:active {
+            background: rgb(253, 215, 215);
+            color:black
+        }
+        .star-checked {
+            color: black;
+            font-size: 10px;
+        }
+        .star-review-section {
+            color: orange;
+            font-size: 20px;
+        }
+        .review-section {
+            background: #f6f6f6;
+            padding-left: 200px;
+            padding-right: 200px;
+            padding-top: 50px;
+            padding-bottom: 100px;
+        }
+
+       .parent {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <% include navbar.ejs%>
+
+    <div class="mainContainer description">
+        <div class="row">
+            <div class="col-7">
+                <img src="https://www.esteelauder.co.uk/media/export/cms_2.0/homepage/holiday_2018/hp_cybermonday_skincare.jpg">
+            </div>
+            <div class="col-5 parent">
+                <div>
+                    <div class="product-name">Christmas Collections</div>
+                    <div class="product-subheading"><p>Special Deal</p></div>
+                    <button class="btn btn-outline-dark" onclick="window.location='/products/category/skincare'">Shop Now</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-5 parent" align="right">
+                <div>
+                    <div class="product-name">Best Selling Products</div>
+                    <div class="product-subheading">Buy it Today</div>
+                    <button class="btn btn-outline-dark" onclick="window.location='/products/category/lip'">Shop Now</button>
+                </div>
+            </div>
+            <div class="col-7">
+                <img src="https://www.esteelauder.fr/media/export/cms_2.0/homepage/2018/december/hp_lipstick_offer_PC_dec18_fr.jpg">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-7">
+                <img src="https://www.esteelauder.co.uk/media/export/cms_2.0/homepage/holiday_2018/hp_cybermonday_fragrance.jpg">
+            </div>
+            <div class="col-5 parent">
+                <div>
+                    <div class="product-name">Classic Collections</div>
+                    <div class="product-subheading">With More Special Deals</div>
+                    <button class="btn btn-outline-dark" onclick="window.location='/products/category/fragrance'">Shop Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

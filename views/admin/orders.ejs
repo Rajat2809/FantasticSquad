@@ -1,0 +1,189 @@
+<div class="customNav center-div shadow">
+    <p style="margin-left:30px"><font size="5">Orders</font></p>
+</div>
+<div class="tab-content">
+    <div class="col-12 shadow" style="background-color: white; padding:50px">
+        <div class="center-div">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="search_bar_icon"><i class="fas fa-search"></i></span>
+                </div>
+                <input id="order-query-textfield" type="text" class="form-control" placeholder="Search orders" aria-label="Search orders" aria-describedby="search_bar_icon" oninput="queryOrders()">
+            </div>
+        </div>
+        <br>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Order</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Payment Status</th>
+                        <th scope="col">Fulfillment Status</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="order-table-body"></tbody>
+            </table>
+        </div>
+        <div align="center">
+            <button id="previous-orders" class="btn btn-outline-dark" onclick="clickOrderPaginationButton('#previous-orders')"><i class="fas fa-arrow-left"></i></button>
+            <button id="next-orders" class="btn btn-outline-dark" onclick="clickOrderPaginationButton('#next-orders')"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal-label">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="modal-body" class="modal-body">
+            ...
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-dark" id="modal-button">Fulfill</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+<script>
+    function queryOrders(q = document.getElementById("order-query-textfield").value, limit = 20, offset = 0){
+        $.ajax({
+            type: 'GET',
+            url: "/admin/orders",
+            data: {
+                q: q,
+                limit: limit,
+                offset: offset
+            }
+        }).done(function(orders) {
+            renderOrders(orders.data)
+            var previous = document.getElementById("previous-orders")
+            if (orders.pagination && orders.pagination.previous){
+                $('#previous-orders').data("pagination", JSON.stringify(orders.pagination.previous))
+                $('#previous-orders').prop("disabled", false);
+            }
+            else {
+                $('#previous-orders').data("pagination", null)
+                $('#previous-orders').prop("disabled", true);
+            }
+        
+            var next = document.getElementById("previous-orders")
+            if (orders.pagination && orders.pagination.next){
+                $('#next-orders').data("pagination", JSON.stringify(orders.pagination.next))
+                $('#next-orders').prop("disabled", false);
+            }
+            else {
+                $('#next-orders').data("pagination", null)
+                $('#next-orders').prop("disabled", true);
+            }   
+        }).fail(function(res0) {
+            var res = JSON.parse(res0)
+            console.log(data)
+            alert("Failed: cann't connect to backend server")
+        });
+    }
+
+    function invertFulFillment(shoppingCartId, tagId ,value){
+        $.ajax({
+            type: 'PUT',
+            url: "/admin/order/fulfillment/invert",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                shoppingCartId: shoppingCartId
+            })
+        }).done(function(res) {
+            if (res.success){
+                document.getElementById(tagId).innerHTML = value;
+        
+                $('#exampleModal').modal('toggle')
+            }
+            else {
+                alert("failed")
+            }
+        })
+    }
+
+    function renderOrders(data){
+        var body = ""
+        data.map(function(order){
+            body += `
+            <tr>
+                <td></td>
+                <td><a href="#" data-toggle="modal" data-target="#exampleModal" onclick="updateModal('${ window.btoa(unescape(encodeURIComponent(JSON.stringify(order)))) }')">#${order.id}</a></td>
+                <td>${order.updatedAt}</td>
+                <td>${order.paymentData[0].result.source.name}</td>
+                <td>${order.isPaid ? '<a href="#" class="badge badge-dark">Paid</a>': '<a href="#" class="badge badge-danger">Unpaid</a>'}</td>
+                <td id="fulfilment-${order.id}">${order.isFulfilled ? '<a href="#" class="badge badge-dark">Fulfilled</a>': '<a href="#" class="badge badge-warning">Unfulfilled</a>'}</td>
+                <td>$${order.price.itemPrice}</td>
+            </tr>`
+        })
+        document.getElementById("order-table-body").innerHTML = body;
+    }
+
+    function updateModal(orderString){
+        var order = JSON.parse(decodeURIComponent(escape(window.atob(orderString))));
+        console.log(order)
+        document.getElementById('modal-label').innerHTML = `Order #${order.id}`;
+        
+        var b =  `
+            <div class="sumary-total" style="font-family: 'Palatino', Times, serif;font-size: 20px; font-weight: bold">Shipping Address</div>
+            <div><strong>${ order.paymentData[0].result.source.name}</strong></div>
+            <div>${ order.paymentData[0].result.source.address_line1}</div>
+            <div>${ order.paymentData[0].result.source.address_city} ${ order.paymentData[0].result.source.address_state}${ order.paymentData[0].result.source.address_zip}</div>
+            <div>${ order.paymentData[0].result.source.address_country}</div>
+            <br>
+            <hr>
+            <div class="sumary-total" style="font-family: 'Palatino', Times, serif;font-size: 20px; font-weight: bold">Items</div>
+            
+        `
+
+        order.items.map(function(item){
+            b += `
+                <div class="row">
+                    <div class="col-2">
+                        <img class="rounded" width="100px" src="${item.image}">
+                    </div>
+                    <div class="col-8" style="font-family: 'Palatino', Times, serif;">
+                        <div style="font-size: 25px;">${item.product.name}</div>
+                        <div>SkuId: ${item.id}</div>
+                        <div>Quantity: ${item.quantity}</div>
+                        <div class="product-option">Size: ${item.size}</div>`
+                        if (item.colorHex){
+                            html += `<span class="product-option"><i style='color:${item.colorHex.split(",")[0]}' class='fas fa-circle'></i>&nbsp;&nbsp;${item.shadeName}</span>`;
+                        }
+                    `</div>
+                </div>
+            `
+        })
+
+        var modalButton = document.getElementById("modal-button");
+        var tag = document.getElementById(`fulfilment-${order.id}`);
+        
+        modalButton.innerHTML = tag.innerHTML == '<a href="#" class="badge badge-dark">Fulfilled</a>' ? "Un-fulfill" : "Fulfill";
+        modalButton.addEventListener("click", function(e){
+            invertFulFillment(order.id, `fulfilment-${order.id}`, tag.innerHTML == '<a href="#" class="badge badge-dark">Fulfilled</a>' ? '<a href="#" class="badge badge-warning">Unfulfilled</a>' : '<a href="#" class="badge badge-dark">Fulfilled</a>')
+        })
+
+        document.getElementById('modal-body').innerHTML = b;
+    }
+
+    function clickOrderPaginationButton(target){
+        var payload = JSON.parse($(target).data("pagination") || "{}")
+        console.log(payload)
+        queryOrders(payload.q, payload.limit, payload.offset)
+    }
+
+    queryOrders();
+</script>

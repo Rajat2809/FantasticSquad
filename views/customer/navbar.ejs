@@ -1,0 +1,95 @@
+<style>
+    .customer-nav {
+        z-index: 999;
+        height: 80px;
+        opacity: .4;
+    }
+    .customer-nav-default {
+        opacity: 1;
+    }
+    .customer-nav:hover {
+        opacity: 1;
+    }
+    .nav-link {
+        border-bottom: none
+    }
+    .nav-item:hover {
+        text-shadow: 0 0 1px lightpink;
+    }
+    .categories-list
+    {
+        position: relative;
+    }
+    .categories-list ul {
+        position: absolute;
+        top: -5px;
+    }
+    .wide-spacing-nav li {
+        margin-right: 40px;
+    }
+    .shopping-cart-icon {
+        color: black
+    }
+    .logo{
+        width: 150px;
+    }
+</style>
+<nav id="navBar" class="navbar navbar-expand-lg navbar-light bg-light customer-nav customer-nav-default">
+    <a class="navbar-brand" href="/"><img class ="logo" src="/img/logo_final_3.png" alt="Shop"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse " id="navbarNav" >
+        <ul class="navbar-nav wide-spacing-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/skincare"><strong>SKINCARE</strong></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/makeup"><strong>MAKEUP</strong></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/fragrance"><strong>FRAGRANCE</strong></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/re-nutriv"><strong>RE-NUTRIV</strong></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/aerin"><strong>AERIN</strong></a>
+            </li>
+        </ul>
+
+        <div class="col-1" align="center">
+            <a class="shopping-cart-icon" href="/customer/shoppingCart/view"><i class="fas fa-shopping-cart fa-2x"></i></a>
+            <span id="item-count" class="badge badge-pill badge-danger">0</span>
+        </div>
+
+        <form class="form-inline my-2 my-lg-0" action="/products/search">
+            <input name="q" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+
+<script>
+    var shoppingCart;
+    $.ajax({
+        type: 'GET',
+        url: "/customer/shoppingCart"
+    }).done(function(res) {
+        shoppingCart = res.shoppingCart;
+
+        var iQuantity = 0;
+        shoppingCart.items.map(function(item){
+            iQuantity += item.quantity;
+        })
+        document.getElementById("item-count").innerHTML = iQuantity;
+
+        console.log("got here")
+    }).fail(function(res0) {
+        var res = JSON.parse(res0)
+        console.log(data)
+        alert("Failed: can't connect to backend server")
+    });
+</script>

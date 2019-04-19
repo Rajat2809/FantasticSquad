@@ -1,0 +1,241 @@
+<div class="customNav center-div shadow">
+    <p style="margin-left:30px"><font size="5">Home</font></p>
+</div>
+<div class="tab-content">
+    <div class="col-12 shadow" style="background-color: white; height: 80px;">
+        <div class="row">
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color: rgb(221, 217, 217)">
+                <p>
+                <div><font size="2" >Total Sale</font></div>
+                <div><strong><font id="stat-total-sale" size="4" weight="bold">$4568.32</font></strong></div>
+                </p>
+            </div>
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color: rgb(221, 217, 217)">
+                <p>
+                <div><font size="2" >Tax</font></div>
+                <div><strong><font id="stat-tax" size="4" weight="bold">$456.83</font></strong></div>
+                </p>
+            </div>
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color: rgb(221, 217, 217)">
+                <p>
+                <div><font size="2" >Item Sold</font></div>
+                <div><strong><font id="stat-item-sold" size="4" weight="bold">192</font></strong></div>
+                </p>
+            </div>
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color:rgb(221, 217, 217)">
+                <p>
+                <div><font size="2" >Average Item Price</font></div>
+                <div><strong><font id="stat-average-item-price" size="4" weight="bold">$25.32</font></strong></div>
+                </p>
+            </div>
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color:rgb(221, 217, 217)">
+                    <p>
+                    <div><font size="2" >Average Items Per Cart</font></div>
+                    <div><strong><font id="stat-average-cart-item" size="4" weight="bold">$25.32</font></strong></div>
+                    </p>
+                </div>
+            <div class="center-div col-2" align="center" style="border-right-style: solid;border-right-width: 1px;border-right-color:rgb(221, 217, 217)">
+                <p>
+                <div><font size="2" >Order to Fulfill</font></div>
+                <div><strong><font id="stat-item-to-fulfill" size="4" weight="bold">38</font></strong></div>
+                </p>
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <div class="row">
+        <div id="chart-1" class="col-4 " style="height: 250px;"></div>
+        <div id="chart-2" class="col-4 " style="height: 250px;"></div>
+        <div id="chart-3" class="col-4 " style="height: 250px;"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div id="chart-4" class="col-4 " style="height: 250px;"></div>
+        <div id="chart-5" class="col-4 " style="height: 250px;"></div>
+        <div id="chart-6" class="col-4 " style="height: 250px;"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div id="map-1"></div>
+    </div>
+        
+</div>
+<script>
+    function drawPieChart(container, title, data){
+        Highcharts.chart(container, {
+            credits: false,
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            title: {
+                text: title,
+                align: 'left',
+                verticalAlign: 'top',
+                style: {
+                    fontWeight: 'bold',
+                }
+            },
+            tooltip: {
+                pointFormat: '<b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%'],
+                    showInLegend: true
+ 
+                },
+            },
+            series: [{
+                type: 'pie',
+                innerSize: '80%',
+                data: data
+            }]
+        });
+    }
+
+    function drawLineChart(container, title, yAxisLabel, series){
+        Highcharts.chart(container, {
+            title: {
+                text: title
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            yAxis: {
+                title: {
+                    text: yAxisLabel
+                }
+            },
+
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                }
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    pointStart: 2010
+                }
+            },
+
+            series: series,
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+        });
+    }
+
+    // $.getJSON('https://cdn.rawgit.com/highcharts/highcharts/680f5d50a47e90f53d814b53f80ce1850b9060c0/samples/data/world-population.json', function (data) {
+
+    //     $('#map-1').highcharts('Map', {
+    //         chart: {
+    //             borderWidth: 1,
+    //             map: 'custom/world'
+    //         },
+
+    //         title: {
+    //             text: 'World population 2013 by country'
+    //         },
+
+    //         subtitle: {
+    //             text: 'Demo of Highcharts map with bubbles'
+    //         },
+
+    //         legend: {
+    //             enabled: false
+    //         },
+
+    //         mapNavigation: {
+    //             enabled: true,
+    //             buttonOptions: {
+    //                 verticalAlign: 'bottom'
+    //             }
+    //         },
+
+    //         series: [{
+    //             name: 'Countries',
+    //             color: '#E0E0E0',
+    //             enableMouseTracking: false
+    //         }, {
+    //             type: 'mapbubble',
+    //             name: 'Population 2016',
+    //             joinBy: ['iso-a3', 'code3'],
+    //             data: data,
+    //             minSize: 4,
+    //             maxSize: '12%',
+    //             tooltip: {
+    //                 pointFormat: '{point.properties.hc-a2}: {point.z} thousands'
+    //             }
+    //         }]
+    //     });
+    // });
+
+
+
+
+    function getStats(){
+        $.ajax({
+            type: 'GET',
+            url: "/admin/stats"
+        }).done(function(stats) {
+            console.log(stats)
+            document.getElementById("stat-item-sold").innerHTML = stats.itemSold;
+            document.getElementById("stat-total-sale").innerHTML = stats.totalSale;
+            document.getElementById("stat-tax").innerHTML = stats.tax;
+            document.getElementById("stat-item-to-fulfill").innerHTML = stats.orderToFulfill;
+            document.getElementById("stat-average-item-price").innerHTML = stats.averageItemPrice;
+            document.getElementById("stat-average-cart-item").innerHTML = stats.averageItemPerCart;
+
+            var d2 = [
+                ['Male', 58.9],
+                ['Female', 123.29],
+            ]
+
+            drawPieChart("chart-1", "Visitors By Device", stats.charts.devices);
+            drawPieChart("chart-2", "Visitors By Locale", stats.charts.locales);
+            drawPieChart("chart-3", "User By Gender", d2)
+
+            drawLineChart("chart-4", "Visits", "Count", stats.charts.visits) 
+            drawLineChart("chart-5", "Sales", "$", stats.charts.sales) 
+            drawLineChart("chart-6", "Conversion Rate", "%", stats.charts.conversionRates) 
+        }).fail(function(res0) {
+            var res = JSON.parse(res0)
+            console.log(data)
+            alert("Failed: cann't connect to backend server")
+        });
+    }
+
+    getStats()
+</script>
+
+
+    
