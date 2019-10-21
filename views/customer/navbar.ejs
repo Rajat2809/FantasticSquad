@@ -33,6 +33,28 @@
     .logo{
         width: 150px;
     }
+    .sigin{
+        background: none;
+        border:none;    
+        cursor: pointer;
+    }
+    .modal-backdrop{
+        z-index:0;
+    }
+    [data-letters]:before {
+        content:attr(data-letters);
+        display:inline-block;
+        font-size:1em;
+        width:2.5em;
+        height:2.5em;
+        line-height:2.5em;
+        text-align:center;
+        border-radius:50%;
+        background:rgba(172, 13, 52, 0.582);
+        vertical-align:middle;
+        margin-right:1em;
+        color:white;
+        }
 </style>
 <nav id="navBar" class="navbar navbar-expand-lg navbar-light bg-light customer-nav customer-nav-default">
     <a class="navbar-brand" href="/"><img class ="logo" src="/img/logo_final_3.png" alt="Shop"></a>
@@ -59,6 +81,102 @@
             </li>
         </ul>
 
+        <ul id="signInUser" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:visible;">
+            <li class="nav-item">
+                <button type="button" class="nav-link sigin" id="signin" data-toggle="modal" data-target="#Modal">SignIn</button>
+            </li>
+            <!-- <li class="nav-item">
+                <a href="#" class="nav-link signup" id="signup" data-toggle="modal" data-target="#ModalSignup">SignUp</a>
+            </li> -->
+        </ul>
+        
+        <ul id="signOut" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:hidden;">
+               <li class="nav-ite"> <p id="initialCircle" data-letters='R'></p></li>
+                    <li class="nav-item"><a href="#" id="signOut" class="nav-link" name="signOut">SignOut</a></li> 
+                
+        </ul>
+        </ul>
+        <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="ModalLabel">Login</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- <form action="/user/getUser" method="get"> -->
+                <div class="modal-body">
+                <div class="row">
+                <div class="col-md-6">
+                UserName:
+                </div>
+                <div class="col-md-6">
+                <input id="signin-email" name="email" type="text"/>
+                </div>
+            </div><br>
+              <div class="row">
+                <div class="col-md-6">
+                Password:
+                </div>
+                <div class="col-md-6">
+                <input id="signin-password" name="pass" type="Password"/>
+                </div>
+            </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal" data-target="#ModalSignup">Sign up</button>
+                  <button type="button" id="login" class="btn btn-primary">Login</button>
+                </div>
+                <!-- </form> -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal fade" id="ModalSignup" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="ModalLabel">Login</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form action='/user/registerUser' method="GET">
+                <div class="modal-body">
+                  <div class="row">
+                      <div class="col-md-6">
+                      UserName:
+                      </div>
+                      <div class="col-md-6">
+                      <input id="signup-email" name="email" type="text"/>
+                      </div>
+                  </div><br>
+                    <div class="row">
+                      <div class="col-md-6">
+                      Password:
+                      </div>
+                      <div class="col-md-6">
+                      <input id="signup-password" name="pass" type="Password"/>
+                      </div>
+                  </div><br>
+                     <div class="row">
+                      <div class="col-md-6">
+                      ConfirmPassword:
+                      </div>
+                      <div class="col-md-6">
+                      <input id="signup-confirm-password" name="confirmPass" type="password"/>
+                      </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" id="signUp">Sign up</button>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
         <div class="col-1" align="center">
             <a class="shopping-cart-icon" href="/customer/shoppingCart/view"><i class="fas fa-shopping-cart fa-2x"></i></a>
             <span id="item-count" class="badge badge-pill badge-danger">0</span>
@@ -73,7 +191,7 @@
 
 
 <script>
-    var shoppingCart;
+    var shoppingCart,user;
     $.ajax({
         type: 'GET',
         url: "/customer/shoppingCart"
@@ -91,5 +209,45 @@
         var res = JSON.parse(res0)
         console.log(data)
         alert("Failed: can't connect to backend server")
+    });
+
+    $('#signOut').on('click',()=>{
+        debugger;
+        sessionStorage.removeItem('currentUser');
+        if(!sessionStorage.getItem('currentUser')){
+            document.getElementById('signInUser').style.visibility="visible";
+            document.getElementById('initialCircle').setAttribute('data-letters','R');
+            document.getElementById('signOut').style.visibility="hidden";
+         }
+    })
+    $('#login').on('click',()=>{
+        debugger
+        var email=$('#signin-email').val();
+        var pass = $('#signin-password').val();
+        $.ajax({
+            type: 'GET',
+            url: "/user/getUser",
+            data:{email:$('#signin-email').val(),pass:$('#signin-password').val()},
+            success: function(res){
+                if(res[0]){
+             $('.close').click();
+             debugger
+             sessionStorage.setItem('currentUser',res[1].username);
+             if(sessionStorage.getItem('currentUser')){
+                document.getElementById('signInUser').style.visibility="hidden";
+                document.getElementById('initialCircle').setAttribute('data-letters',res[1].username[0].toUpperCase());
+                document.getElementById('signOut').style.visibility="visible";
+               // res[1].username[0].toUpperCase()+'><li class="nav-item"><button id="signOut" class="nav-link" name="signOut">SignOut</button></li> </p>';
+             }
+                }else{
+                    $('.close').click();
+                    alert('User Not valid');
+                }
+            },
+            error: function(res){
+               $('.close').click();
+                alert('User Not valid');
+            }
+        });
     });
 </script>

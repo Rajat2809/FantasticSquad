@@ -238,8 +238,8 @@
                         <option value="10">Qty: 10</option>
                     </select>
                     <br><br>
-                    
-                    <button class="btn btn-dark col-4" onclick="addToCart()"><strong>Add to Bag</strong></button>
+                    <!-- onclick="addToCart()" -->
+                    <button class="btn btn-dark col-4" id="addToCart" ><strong>Add to Bag</strong></button>
                 </form>
             </div>
         </div>
@@ -465,6 +465,7 @@
     }
 
     function addToCart(){
+        if(!sessionStorage.getItem("currentUser")){
         var quantityPicker = document.getElementById("quantity-picker") 
         var quantity = quantityPicker.options[quantityPicker.selectedIndex].value
         $.ajax({
@@ -490,7 +491,44 @@
             alert("Failed: can't connect to backend server")
         });
     }
-
+    else{
+       // $('.sigin').trigger('click');
+      
+    }
+    }
+$('#addToCart').on('click',(e)=>{
+    e.preventDefault();
+    if(!sessionStorage.getItem("currentUser")){
+        var quantityPicker = document.getElementById("quantity-picker") 
+        var quantity = quantityPicker.options[quantityPicker.selectedIndex].value
+        $.ajax({
+            type: 'POST',
+            url: "/customer/shoppingCart",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                skuId: product.skus[selectedSkuId].id,
+                quantity: quantity
+            })
+        }).done(function(body) {
+            shoppingCart = body.shoppingCart;      
+            var iQuantity = 0;
+            shoppingCart.items.map(function(item){
+                iQuantity += item.quantity;
+            })
+            document.getElementById("item-count").innerHTML = iQuantity;   
+        }).fail(function(res0) {
+            var res = JSON.parse(res0)
+            console.log(data)
+            alert("Failed: can't connect to backend server");
+        });
+    }
+    else{
+        $('.sigin').trigger('click');
+      
+    }
+})
     console.log(<%- JSON.stringify(product)%>)
     
     $("#mainContainer").on("scroll", function() {
