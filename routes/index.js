@@ -2,6 +2,7 @@ const express = require('express');
 const admin = require('./admin');
 const customer = require('./customer');
 const payment = require('../payment');
+const user = require('../user');
 // const shoppingCarts = require('../shoppingCart');
 const bodyParser = require('body-parser');
 
@@ -34,4 +35,6 @@ router.route('/products/category/:category').get(customer.getProductsForCategory
 router.route('/products/search').get(customer.queryProducts);
 router.route('/products/:productId/:mode').get(customer.getProduct);
 
+router.route('/user/getUser').get(user.getUser);
+router.route('/user/registerUser').get(user.registerUser);
 module.exports = router;

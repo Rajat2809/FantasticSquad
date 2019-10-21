@@ -1,5 +1,6 @@
 const products = require("../product");
 const shoppingCarts = require("../shoppingCart");
+const user = require('../user');
 
 module.exports = {
     getProduct: products.getProduct,
