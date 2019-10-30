@@ -79,6 +79,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/products/category/aerin"><strong>AERIN</strong></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products/category/eyeglasses"><strong>EYE GLASSES</strong></a>
+            </li>
         </ul>
 
         <ul id="signInUser" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:visible;">
@@ -203,8 +206,6 @@
             iQuantity += item.quantity;
         })
         document.getElementById("item-count").innerHTML = iQuantity;
-
-        console.log("got here")
     }).fail(function(res0) {
         var res = JSON.parse(res0)
         console.log(data)
