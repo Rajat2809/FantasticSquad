@@ -57,34 +57,41 @@
         }
 </style>
 <nav id="navBar" class="navbar navbar-expand-lg navbar-light bg-light customer-nav customer-nav-default">
-    <a class="navbar-brand" href="/"><img class ="logo" src="/img/logo_final_3.png" alt="Shop"></a>
+    <a class="navbar-brand" href="/"><img class ="logo" src="/img/logo_final_3.png" style="width:36px" alt="Shop"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse " id="navbarNav" >
         <ul class="navbar-nav wide-spacing-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/skincare"><strong>SKINCARE</strong></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/makeup"><strong>MAKEUP</strong></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/fragrance"><strong>FRAGRANCE</strong></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/re-nutriv"><strong>RE-NUTRIV</strong></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/aerin"><strong>AERIN</strong></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/products/category/eyeglasses"><strong>EYE GLASSES</strong></a>
-            </li>
-        </ul>
-
-        <ul id="signInUser" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:visible;">
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Men
+                               </a>
+                </li>
+                <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Women
+                               </a>
+                </li>
+             <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         Cosmetics & Fragnance
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link" href="/products/category/skincare"><strong>SKINCARE</strong></a>
+                        <a class="nav-link" href="/products/category/makeup"><strong>MAKEUP</strong></a>
+                        <a class="nav-link" href="/products/category/fragrance"><strong>FRAGRANCE</strong></a>
+                        <a class="nav-link" href="/products/category/re-nutriv"><strong>RE-NUTRIV</strong></a>
+                        <a class="nav-link" href="/products/category/aerin"><strong>AERIN</strong></a>
+        </div>
+      </li>
+<li class="nav-item">
+    <a class="nav-link" href="/products/category/eyeglasses"><strong>EYE GLASSES</strong></a>
+</li>        
+</ul>
+        <div class="collapse navbar-collapse">
+        <ul id="signInUser" class="col-1 navbar-nav wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:visible; ">
             <li class="nav-item">
                 <button type="button" class="nav-link sigin" id="signin" data-toggle="modal" data-target="#Modal">SignIn</button>
             </li>
@@ -92,13 +99,11 @@
                 <a href="#" class="nav-link signup" id="signup" data-toggle="modal" data-target="#ModalSignup">SignUp</a>
             </li> -->
         </ul>
-        
         <ul id="signOut" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:hidden;">
                <li class="nav-ite"> <p id="initialCircle" data-letters='R'></p></li>
-                    <li class="nav-item"><a href="#" id="signOut" class="nav-link" name="signOut">SignOut</a></li> 
-                
+                    <li class="nav-item"><a href="#" id="signOut" class="nav-link" name="signOut">SignOut</a></li>
         </ul>
-        </ul>
+    </div>
         <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -152,7 +157,7 @@
                       UserName:
                       </div>
                       <div class="col-md-6">
-                      <input id="signup-email" name="email" type="text"/>
+                      <input id="signup-email" name="email" type="text" required/>
                       </div>
                   </div><br>
                     <div class="row">
@@ -160,7 +165,7 @@
                       Password:
                       </div>
                       <div class="col-md-6">
-                      <input id="signup-password" name="pass" type="Password"/>
+                      <input id="signup-password" name="pass" type="Password"  min=8 required/>
                       </div>
                   </div><br>
                      <div class="row">
@@ -168,7 +173,7 @@
                       ConfirmPassword:
                       </div>
                       <div class="col-md-6">
-                      <input id="signup-confirm-password" name="confirmPass" type="password"/>
+                      <input id="signup-confirm-password" name="confirmPass" type="password" min=8 required/>
                       </div>
                   </div>
                 </div>

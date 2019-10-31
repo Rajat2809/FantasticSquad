@@ -37,4 +37,5 @@ router.route('/products/:productId/:mode').get(customer.getProduct);
 
 router.route('/user/getUser').get(user.getUser);
 router.route('/user/registerUser').get(user.registerUser);
+router.route('/user/addProduct').get(user.addProduct);
 module.exports = router;
