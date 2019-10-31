@@ -72,6 +72,12 @@ function getProducts_(input, cb){
 
 module.exports.getProductsForCategory = function(request, response){  
     var category = request.params.category;
+    var params = {
+        category: "Eye Glasses"
+    }
+    if(category == "eyeglasses"){
+        return response.render("./customer/eyeGlasses", params)
+    }
     getProducts_({q: category, limit: request.query.limit, offset: request.query.offset}, function(err, products){
         if (err){
             return response.status(500).send({
