@@ -18,6 +18,40 @@ module.exports.getUser = function(req,res){
         res.send([false,null]);
      });
 }
+
+module.exports.addProduct = function(req,res){
+    console.log("hello");
+    console.log(req.query);
+    let {merchantID,productName,description,benefits,subHeading
+        ,imageURL,publish,price,keywords,relatedProduct} = {...req.query};
+    console.log(merchantID+' '+productName);
+
+    let query = {
+        merchantId: merchantID,
+        name: productName,
+        description:{"detail":description,"benefits":benefits,"subHeading":subHeading},
+        averageRating:0,
+        isPublished:publish,
+        image:{"normal":imageURL},
+        currency:'USD',
+        priceRange: "$"+price,
+        locale:"en_us",
+        keywords:keywords,
+        relatedProduct:[relatedProduct],
+        createdAt: Date.now(),
+        updatedAt: Date.now()};
+    // db.User.findOne({where:{username:email}}).then(user=>{
+    //     if(user){
+    //     var u = JSON.parse(JSON.stringify(user));
+    //     if(u.password == pass)
+    //     res.send([true,u]);
+    //     else
+    //     res.send([false,null]);
+    //    }
+    //    else
+    //    res.send([false,null]);
+    // });
+}
 module.exports.registerUser = function(req,res){
     let{email, pass, confirmPass} ={...req.query};
   if(pass && confirmPass && pass===confirmPass){
