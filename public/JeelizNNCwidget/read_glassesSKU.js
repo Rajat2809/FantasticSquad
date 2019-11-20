@@ -19,7 +19,9 @@ function processData(allText) {
         lines.push(data);
     }
 }
-
+function getLines(){
+    return lines;
+}
 function getRandom(){
     return lines[Math.floor(Math.random() * lines.length)];
 }

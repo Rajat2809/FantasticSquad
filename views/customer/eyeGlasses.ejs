@@ -22,6 +22,11 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+    
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <title><%= category %></title>
 
 
@@ -74,6 +79,69 @@
             text-decoration: none;
             color: black
         }
+
+        .carousel-control.left, .carousel-control.right {
+            background-image:none;
+            margin-top:5%;
+            color:black;
+            opacity:0.5;
+        }
+        
+        .img-responsive{
+            width:100%;
+            height:auto;
+        }
+        
+        @media (min-width: 992px ) {
+            .carousel-inner .active.left {
+                left: -25%;
+            }
+            .carousel-inner .next {
+                left:  25%;
+            }
+            .carousel-inner .prev {
+                left: -25%;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 991px ) {
+            .carousel-inner .active.left {
+                left: -33.3%;
+            }
+            .carousel-inner .next {
+                left:  33.3%;
+            }
+            .carousel-inner .prev {
+                left: -33.3%;
+            }
+            .active > div:first-child {
+                display:block;
+            }
+            .active > div:first-child + div {
+                display:block;
+            }
+            .active > div:last-child {
+                display:none;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .carousel-inner .active.left {
+                left: -100%;
+            }
+            .carousel-inner .next {
+                left:  100%;
+            }
+            .carousel-inner .prev {
+                left: -100%;
+            }
+            .active > div {
+                display:none;
+            }
+            .active > div:first-child {
+                display:block;
+            }
+        }
     </style>
     <script type='text/javascript' src='/JeelizNNCwidget/JeelizNNCwidget.js'></script>
     <script type='text/javascript' src='/JeelizNNCwidget/read_glassesSKU.js'></script>
@@ -84,6 +152,73 @@
             var wid = document.getElementById('JeeWidget');
             wid.style.width = '1000px';
         };
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "/JeelizNNCwidget/glassesSKU.csv",
+                contentType: "text/csv",
+                crossDomain: true,
+                success: function(data) {
+                  
+                    processData(data);
+                   /* var html=``;
+                    var data = getLines();
+                    var doa = [...new Set(data)];
+                    debugger
+                    var lnDoa = doa.length;
+                    doa.forEach((d,i)=>{
+                        if(i<lnDoa-2)
+                        html+=` <div class="item ${i==1?"active":''}">
+                            <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="${d}_new" type="image" src="https://productimage.jeeliz.com/US_${d}.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('${d}')"></a></div>
+                         </div>
+                        `;
+                        
+                    });
+                  document.getElementById('imgBtnSpecs').innerHTML = html;*/
+                }
+             });
+             $('#shoppingCart').hide();
+             $('#searchBar').hide();
+             jQuery('.carousel[data-type="multi"] .item').each(function(){
+                var next = jQuery(this).next();
+                if (!next.length) {
+                    next = jQuery(this).siblings(':first');
+                }
+                next.children(':first-child').clone().appendTo(jQuery(this));
+              
+                for (var i=0;i<2;i++) {
+                    next=next.next();
+                    if (!next.length) {
+                        next = jQuery(this).siblings(':first');
+                    }
+                    next.children(':first-child').clone().appendTo($(this));
+                }
+            });
+        });
+        var lines =[];
+        function processData(allText) {
+            var allTextLines = allText.split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+        
+            for (var i=1; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(',')[0];
+                lines.push(data);
+            }
+        }
+        function getLines(){
+            return lines;
+        }
+        function getGlasses(g){
+            debugger
+          
+            return g;
+        }
+        function getRandom(){
+            debugger
+            var x =lines[Math.floor(Math.random() * lines.length)];
+            return x;
+        }
+       
     </script>
 
     <link rel='stylesheet' href='/css/JeeWidgetPublicGitBasic.css' />
@@ -117,7 +252,7 @@
                 <!-- BACK TO REALTIME VIDEO BUTTON : --><button id='JeeWidgetBackToRealtimeButton'>Back to
                     video</button>
                 <!-- ADJUST BUTTON : -->
-                <div id='JeeWidgetAdjust'></div>
+                <!-- <div id='JeeWidgetAdjust'></div> -->
                 <!-- BEGIN ADJUST NOTICE -->
                 <div id='JeeWidgetAdjustNotice'>
                     You can move the glasses yeah !
@@ -143,12 +278,411 @@
                     <!-- <button id='JeeWidgetFileInputButtonNotice' style="display:none;">Choose image from file</button> -->
                 </div>
             </div>
-
+          
+          <div class="container">
+            <!--The main div for carousel-->
+            <div class="container text-center">
+               <div class="carousel slide row" data-ride="carousel" data-type="multi" data-interval="2000" id="fruitscarousel">
+                  <div class="carousel-inner">
+                    <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_or_vertFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_or_vertFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_or_vertFlash')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_havane_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_havane_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_havane_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_denimOrange_orangeDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_denimOrange_orangeDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_denimOrange_orangeDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_gun_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_gun_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_gun_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_gun_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_gun_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_gun_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_or_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_or_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_or_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_cuivre_pinkBrownDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_cuivre_pinkBrownDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_cuivre_pinkBrownDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_marronArgent_marronVioletDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_marronArgent_marronVioletDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_marronArgent_marronVioletDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_noir_cuivre_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_noir_cuivre_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_noir_cuivre_flash')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_or_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_or_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_or_vert_classique')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_noir_rougeMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_noir_rougeMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_noir_rougeMirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_noir_vertClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_noir_vertClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_noir_vertClassique_g15')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_noir_marron_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_noir_marron_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_noir_marron_degrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_marron_vertDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_marron_vertDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_marron_vertDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_or_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_or_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_or_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_noir_bleuMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_noir_bleuMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_noir_bleuMirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_havaneNoir_vertClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_havaneNoir_vertClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_havaneNoir_vertClassique_g15')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_havane_marron_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_havane_marron_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_havane_marron_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_gris_argent_argent_ mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_gris_argent_argent_ mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_gris_argent_argent_ mirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_havane_marron_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_havane_marron_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_havane_marron_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_predator_noir_gris_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_predator_noir_gris_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_predator_noir_gris_mirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_noir_gun_bleu_ mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_noir_gun_bleu_ mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_noir_gun_bleu_ mirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_denimNoir_bleuMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_denimNoir_bleuMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_denimNoir_bleuMirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_noir_bleuGris_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_noir_bleuGris.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_noir_bleuGris')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_denimBleuClair_bleuDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_denimBleuClair_bleuDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_denimBleuClair_bleuDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_gris_argentDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_gris_argentDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_gris_argentDegrade')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_havane_marronClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_havane_marronClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_havane_marronClassique_g15')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_predator_noir_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_predator_noir_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_predator_noir_vert_classique')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_havane_gun_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_havane_gun_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_havane_gun_vert_classique')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_doubleBridge_bleu_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_doubleBridge_bleu_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_doubleBridge_bleu_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_violet_violet_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_violet_violet_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_violet_violet_mirroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_bronze_cuivre_bleu_miroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_bronze_cuivre_bleu_miroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_bronze_cuivre_bleu_miroir')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_havane_marron_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_havane_marron.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_havane_marron')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_havane_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_havane_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_havane_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_noir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_noir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_noir_vert')"></a></div>
+                     </div>
+                     <div class="item">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_noir_marronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_noir_marronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_noir_marronDegrade')"></a></div>
+                     </div>
+                     <div class="item active left">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_argent_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_argent_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_argent_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item  next left">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_bleu_bleu_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_bleu_bleu_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_bleu_bleu_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_bronze_cuivre_lilas_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_bronze_cuivre_lilas_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_bronze_cuivre_lilas_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_or_marron_classique_b15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_or_marron_classique_b15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_or_marron_classique_b15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_noir_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_noir_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_noir_vert_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_noir_argent_gris_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_noir_argent_gris_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_noir_argent_gris_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_or_marronClairDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_or_marronClairDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_or_marronClairDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_violet_violetMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_violet_violetMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_violet_violetMirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_havaneNoir_marronClassique_b15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_havaneNoir_marronClassique_b15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_havaneNoir_marronClassique_b15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_noir_gris_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_noir_gris_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_noir_gris_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_bleu_argent_bleu_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_bleu_argent_bleu_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_bleu_argent_bleu_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_havaneGun_marronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_havaneGun_marronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_havaneGun_marronDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_bleu_argent_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_bleu_argent_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_bleu_argent_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_havane_gris_degrade_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_havane_gris_degrade_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_havane_gris_degrade_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_noir_bleu_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_noir_bleu.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_noir_bleu')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_noir_gris_bleu_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_noir_gris_bleu_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_noir_gris_bleu_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_havane_marron_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_havane_marron_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_havane_marron_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_noir_gun_argent_ mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_noir_gun_argent_ mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_noir_gun_argent_ mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_biColorNoirJaune_jauneFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_biColorNoirJaune_jauneFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_biColorNoirJaune_jauneFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_havane_gris_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_havane_gris.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_havane_gris')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_havane_bleu_vert_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_havane_bleu_vert_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_havane_bleu_vert_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_noir_gris_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_noir_gris_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_noir_gris_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_orange_argent_rouge_ mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_orange_argent_rouge_ mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_orange_argent_rouge_ mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_biColorNoirVert_vertFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_biColorNoirVert_vertFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_biColorNoirVert_vertFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_noir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_noir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_noir_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_havane_vertClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_havane_vertClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_havane_vertClassique_g15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_havane_marronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_havane_marronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_havane_marronDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_cuivre_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_cuivre_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_cuivre_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_havane_argent_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_havane_argent_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_havane_argent_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_bronze_cuivre_violet_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_bronze_cuivre_violet_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_bronze_cuivre_violet_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_havane_marronClairDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_havane_marronClairDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_havane_marronClairDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_noir_grisDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_noir_grisDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_noir_grisDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_havane_vertClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_havane_vertClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_havane_vertClassique_g15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_havane_bleu_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_havane_bleu_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_havane_bleu_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_noir_gris_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_noir_gris_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_noir_gris_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_wayfarer_noir_grisClairDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_wayfarer_noir_grisClairDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_wayfarer_noir_grisClairDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_justin_havane_marronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_justin_havane_marronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_justin_havane_marronDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_new_wayfarer_noir_vertClassique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_new_wayfarer_noir_vertClassique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_new_wayfarer_noir_vertClassique_g15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_or_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_or_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_or_vert_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_or_orangeFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_or_orangeFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_or_orangeFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmasterFleck_havaneNoir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmasterFleck_havaneNoir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmasterFleck_havaneNoir_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_or_vert_classique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_or_vert_classique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_or_vert_classique_g15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_noir_bleu_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_noir_bleu_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_noir_bleu_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_or_vert_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_or_vert_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_or_vert_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_gun_argentFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_gun_argentFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_gun_argentFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_havaneNoir_bleuGris_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_havaneNoir_bleuGris.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_havaneNoir_bleuGris')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_noir_vert_classique_g15_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_noir_vert_classique_g15.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_noir_vert_classique_g15')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_marron_clair_vert_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_marron_clair_vert_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_marron_clair_vert_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_gun_vert_classique_2_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_gun_vert_classique_2.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_gun_vert_classique_2')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_cuivre_bleuMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_cuivre_bleuMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_cuivre_bleuMirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_noir_grisDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_noir_grisDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_noir_grisDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_doubleBridge_noir_bleu_gris_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_doubleBridge_noir_bleu_gris_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_doubleBridge_noir_bleu_gris_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_marron_marron_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_marron_marron_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_marron_marron_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_caravan_argent_argent_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_caravan_argent_argent_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_caravan_argent_argent_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_andy_havane_orange_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_andy_havane_orange_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_andy_havane_orange_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_havane_marron_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_havane_marron_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_havane_marron_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_noir_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_noir_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_noir_vert_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_bleu_bleu_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_bleu_bleu_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_bleu_bleu_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_noir_bleuClairDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_noir_bleuClairDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_noir_bleuClairDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_noir_grisDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_noir_grisDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_noir_grisDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubround_blanc_vert_mirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubround_blanc_vert_mirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubround_blanc_vert_mirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_boyfriend_noir_gris_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_boyfriend_noir_gris_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_boyfriend_noir_gris_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_chris_violet_gun_gris_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_chris_violet_gun_gris_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_chris_violet_gun_gris_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_cuivre_vertDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_cuivre_vertDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_cuivre_vertDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_gun_gris_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_gun_gris.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_gun_gris')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_clubmaster_noir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_clubmaster_noir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_clubmaster_noir_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_or_marronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_or_marronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_or_marronDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_ferrari_gris_noir_gris_mirror_chromance_new" type="image" src="https://productimage.jeeliz.com/US_rayban_ferrari_gris_noir_gris_mirror_chromance.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_ferrari_gris_noir_gris_mirror_chromance')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_noir_orange_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_noir_orange_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_noir_orange_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_havaneGun_marronDegrade_1_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_havaneGun_marronDegrade_1.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_havaneGun_marronDegrade_1')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_ferrari_noir_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_ferrari_noir_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_ferrari_noir_vert_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_marron_clair_degrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_marron_clair_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_marron_clair_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_or_marron_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_or_marron.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_or_marron')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_cuivre_bleuMarronDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_cuivre_bleuMarronDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_cuivre_bleuMarronDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_havaneGun_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_havaneGun_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_havaneGun_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_ferrari_noir_argent_mirror_chromance_new" type="image" src="https://productimage.jeeliz.com/US_rayban_ferrari_noir_argent_mirror_chromance.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_ferrari_noir_argent_mirror_chromance')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_gun_vert_classique_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_gun_vert_classique.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_gun_vert_classique')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_noir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_noir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_noir_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_or_vertFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_or_vertFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_or_vertFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_noir_violetMirroir_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_noir_violetMirroir.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_noir_violetMirroir')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_ferrari_blue_bleu_mirror_chromance_new" type="image" src="https://productimage.jeeliz.com/US_rayban_ferrari_blue_bleu_mirror_chromance.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_ferrari_blue_bleu_mirror_chromance')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_noir_vert_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_noir_vert_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_noir_vert_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_aviator_or_rose_new" type="image" src="https://productimage.jeeliz.com/US_rayban_aviator_or_rose.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_aviator_or_rose')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_or_orangeFlash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_or_orangeFlash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_or_orangeFlash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_erika_noir_vert_new" type="image" src="https://productimage.jeeliz.com/US_rayban_erika_noir_vert.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_erika_noir_vert')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_ferrari_noir_or_mirror_chromance_new" type="image" src="https://productimage.jeeliz.com/US_rayban_ferrari_noir_or_mirror_chromance.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_ferrari_noir_or_mirror_chromance')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_cockpit_noir_bleu_gradient_flash_new" type="image" src="https://productimage.jeeliz.com/US_rayban_cockpit_noir_bleu_gradient_flash.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_cockpit_noir_bleu_gradient_flash')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="rayban_round_gun_grisDegrade_new" type="image" src="https://productimage.jeeliz.com/US_rayban_round_gun_grisDegrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('rayban_round_gun_grisDegrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="carrera_118S_black_new" type="image" src="https://productimage.jeeliz.com/US_carrera_118S_black.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('carrera_118S_black')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="carrera_118S_black_gold_gray_new" type="image" src="https://productimage.jeeliz.com/US_carrera_118S_black_gold_gray.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('carrera_118S_black_gold_gray')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="carrera_118S_havane_blue_new" type="image" src="https://productimage.jeeliz.com/US_carrera_118S_havane_blue.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('carrera_118S_havane_blue')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="carrera_118S_blue_gray_degrade_new" type="image" src="https://productimage.jeeliz.com/US_carrera_118S_blue_gray_degrade.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('carrera_118S_blue_gray_degrade')"></a></div>
+                     </div>
+                     <div class="item ">
+                        <div class="col-md-3 col-sm-4 col-xs-12"><a><input id="carrera_118S_havane_marron_new" type="image" src="https://productimage.jeeliz.com/US_carrera_118S_havane_marron.jpg" alt="button" width="150" height="150" onclick="JEEWIDGET.load('carrera_118S_havane_marron')"></a></div>
+                     </div>
+                  </div>
+                  <a class="left carousel-control" href="#fruitscarousel" data-slide="prev"><i class="fas fa-arrow-left"></i></a>
+                  <a class="right carousel-control" href="#fruitscarousel" data-slide="next"><i class="fas fa-arrow-right"></i></a> 
+               </div>
+            </div>
+         </div>
             <!-- END FALLBACK (upload picture) NOTICE -->
-            <button id="previous-products" class="btn btn-outline-dark" onclick="JEEWIDGET.load(getRandom())"><i
+            <!-- <button id="previous-products" class="btn btn-outline-dark" onclick="JEEWIDGET.load(getRandom())"><i
                 class="fas fa-arrow-left"></i></button>
         <button id="next-products" class="btn btn-outline-dark" onclick="JEEWIDGET.load(getRandom())"><i
-                class="fas fa-arrow-right"></i></button>
+                class="fas fa-arrow-right"></i></button> -->
+        
         </div>
         <!-- END JEEWIDGET -->
        
@@ -158,6 +692,7 @@
 
 
     <br />
+   
     <!-- <button onclick='test_resizeCanvas();'>RESIZE</button> -->
 </body>
 
