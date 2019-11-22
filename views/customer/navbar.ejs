@@ -91,7 +91,7 @@
 </li>        
 </ul>
         <div class="collapse navbar-collapse">
-        <ul id="signInUser" class="col-1 navbar-nav wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:visible; ">
+        <ul id="signInUser" class="col-1 navbar-nav wide-spacing-nav mr-auto mt-4 mt-lg-2" style="display:inline-flex; ">
             <li class="nav-item">
                 <button type="button" class="nav-link sigin" id="signin" data-toggle="modal" data-target="#Modal">SignIn</button>
             </li>
@@ -99,7 +99,7 @@
                 <a href="#" class="nav-link signup" id="signup" data-toggle="modal" data-target="#ModalSignup">SignUp</a>
             </li> -->
         </ul>
-        <ul id="signOut" class="navbar-nav col-1 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="visibility:hidden;">
+        <ul id="signOut" class="navbar-nav col-2 wide-spacing-nav mr-auto mt-2 mt-lg-0" style="display:none;">
                <li class="nav-ite"> <p id="initialCircle" data-letters='R'></p></li>
                     <li class="nav-item"><a href="#" id="signOut" class="nav-link" name="signOut">SignOut</a></li>
         </ul>
@@ -199,6 +199,18 @@
 
 
 <script>
+    $(document).ready(()=>{
+        if(sessionStorage.getItem("currentUser")){
+            document.getElementById('signInUser').style.display="none";
+            document.getElementById('initialCircle').setAttribute('data-letters','R');
+            document.getElementById('signOut').style.display="inline-flex";
+        }
+        else{
+            document.getElementById('signInUser').style.display="inline-flex";
+            document.getElementById('initialCircle').setAttribute('data-letters','R');
+            document.getElementById('signOut').style.display="none"; 
+        }
+    });
     var shoppingCart,user;
     $.ajax({
         type: 'GET',
@@ -221,9 +233,9 @@
         debugger;
         sessionStorage.removeItem('currentUser');
         if(!sessionStorage.getItem('currentUser')){
-            document.getElementById('signInUser').style.visibility="visible";
+            document.getElementById('signInUser').style.display="inline-flex";
             document.getElementById('initialCircle').setAttribute('data-letters','R');
-            document.getElementById('signOut').style.visibility="hidden";
+            document.getElementById('signOut').style.display="none";
          }
     })
     $('#login').on('click',()=>{
@@ -240,9 +252,9 @@
              debugger
              sessionStorage.setItem('currentUser',res[1].username);
              if(sessionStorage.getItem('currentUser')){
-                document.getElementById('signInUser').style.visibility="hidden";
+                document.getElementById('signInUser').style.display="none";
                 document.getElementById('initialCircle').setAttribute('data-letters',res[1].username[0].toUpperCase());
-                document.getElementById('signOut').style.visibility="visible";
+                document.getElementById('signOut').style.display="inline-flex";
                // res[1].username[0].toUpperCase()+'><li class="nav-item"><button id="signOut" class="nav-link" name="signOut">SignOut</button></li> </p>';
              }
                 }else{

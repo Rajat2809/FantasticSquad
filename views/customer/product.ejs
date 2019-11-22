@@ -498,7 +498,8 @@
     }
 $('#addToCart').on('click',(e)=>{
     e.preventDefault();
-    if(!sessionStorage.getItem("currentUser")){
+    debugger
+    if(sessionStorage.getItem("currentUser")){
         var quantityPicker = document.getElementById("quantity-picker") 
         var quantity = quantityPicker.options[quantityPicker.selectedIndex].value
         $.ajax({
