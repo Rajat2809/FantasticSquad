@@ -19,7 +19,7 @@
     "body-parser": "^1.18.3",
     "connect-session-sequelize": "^6.0.0",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-session": "^1.15.6",
     "http": "0.0.0",
     "pg": "^7.6.1",
